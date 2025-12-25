@@ -1,3 +1,6 @@
+from typing import Any
+
+
 from block import Block
 
 
@@ -43,3 +46,13 @@ class Board:
                 if self.board[i][j] == 0:
                     return i, j
         return None
+
+    def print(self) -> None:
+        print("   +" + "--" * self.width + "--+")
+
+        for i, row in enumerate[Any](self.board):
+            row_str = "".join(f"{cell if cell != 0 else '.':2}" for cell in row)
+            print(f"{i:2} | {row_str} |")
+
+        print("   +" + "--" * self.width + "--+")
+

@@ -28,7 +28,7 @@ def main():
         print("No solution found")
         return
     print("Solution found")
-    print(board)
+    board.print()
 
 def solve(board: Board, blocks: list[Block]) -> bool:
     def dfs(blocksLeft: set[Block]) -> bool:
@@ -52,11 +52,7 @@ def solve(board: Board, blocks: list[Block]) -> bool:
             
         return False
 
-    for block in blocks:
-        if dfs(set[Block](blocks)):
-            return True
-        
-    return False
+    return dfs(set[Block](blocks))
     
 
 def check_set_up(board: Board, blocks: list[Block]) -> bool:
