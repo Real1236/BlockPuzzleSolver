@@ -45,7 +45,7 @@ class Board:
             for j in range(self.width):
                 if self.board[i][j] == 0:
                     return i, j
-        return None
+        return -1, -1
 
     def print(self) -> None:
         print("   +" + "--" * self.width + "--+")
