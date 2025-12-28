@@ -48,11 +48,11 @@ class Board:
         return -1, -1
 
     def print(self) -> None:
-        print("   +" + "--" * self.width + "--+")
+        print("   +" + "---" * self.width + "-+")
 
         for i, row in enumerate[Any](self.board):
-            row_str = "".join(f"{cell if cell != 0 else '.':2}" for cell in row)
+            row_str = " ".join(f"{cell if cell != 0 else '.':2}" for cell in row)
             print(f"{i:2} | {row_str} |")
 
-        print("   +" + "--" * self.width + "--+")
+        print("   +" + "---" * self.width + "-+")
 
