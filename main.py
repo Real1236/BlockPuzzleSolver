@@ -29,7 +29,7 @@ def main():
 
     # Sort blocks by area (largest first) for better efficiency
     blocksList.sort(key=lambda x: x[0]*x[1], reverse=True)
-    blocks = set(Block(i + 1, blockData[0], blockData[1]) for i, blockData in enumerate[list[int]](blocksList))
+    blocks = [Block(i + 1, blockData[0], blockData[1]) for i, blockData in enumerate[list[int]](blocksList)]
 
     if not check_set_up(board, blocks):
         return
@@ -46,40 +46,36 @@ def main():
 
     board.export_csv("solution.csv")
 
-def solve(board: Board, blocks: set[Block]) -> bool:
-    memo: dict[tuple[tuple[tuple[int, ...], ...], tuple[int, ...]], bool] = {}
+def solve(board: Board, blocks: list[Block]) -> bool:
+    counter = 0
+    def dfs(blocksUsed: set[Block]) -> bool:
+        nonlocal counter
+        counter += 1
+        if counter % 10000 == 0:
+            print(f"DFS iterations: {counter}, blocks used: {len(blocksUsed)}/{len(blocks)}")
 
-    def board_state_tuple():
-        return tuple(tuple(row) for row in board.board)
-
-    def dfs(blocksLeft: set[Block]) -> bool:
-        # Memoization key: (board state, tuple of remaining block ids)
-        key = (board_state_tuple(), tuple(sorted(b.id for b in blocksLeft)))
-        if key in memo:
-            return False
-
-        print(len(memo), "states explored")
-        if not blocksLeft:
+        if len(blocksUsed) == len(blocks):
             return True
 
         x, y = board.get_first_empty_position()
-        for block in blocksLeft:
+        for block in blocks:
+            if block in blocksUsed:
+                continue
             for rotated in [False, True]:
                 if not board.is_valid_position(block, x, y, rotated):
                     continue
                 board.place_block(block, x, y, rotated)
-                next_blocks = blocksLeft - {block}
+                next_blocks = blocksUsed | {block}
                 if dfs(next_blocks):
                     return True
                 board.remove_block(block, x, y, rotated)
 
-        memo[key] = False
         return False
 
-    return dfs(blocks)
+    return dfs(set())
     
 
-def check_set_up(board: Board, blocks: set[Block]) -> bool:
+def check_set_up(board: Board, blocks: list[Block]) -> bool:
     blocksArea = sum(block.length * block.width for block in blocks)
     boardArea = board.length * board.width
     if blocksArea != boardArea:
